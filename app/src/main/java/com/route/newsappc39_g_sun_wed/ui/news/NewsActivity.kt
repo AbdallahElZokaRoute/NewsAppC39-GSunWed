@@ -1,4 +1,4 @@
-package com.route.newsappc39_g_sun_wed
+package com.route.newsappc39_g_sun_wed.ui.news
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,17 +11,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.route.newsappc39_g_sun_wed.R
 import com.route.newsappc39_g_sun_wed.fragments.CategoriesFragment
 import com.route.newsappc39_g_sun_wed.fragments.NewsFragment
 import com.route.newsappc39_g_sun_wed.model.CategoriesScreen
@@ -44,7 +43,7 @@ class NewsActivity : ComponentActivity() {
 }
 
 // 1- Refactor -> News Activity
-//
+
 @Composable
 fun NewsScreenContent() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -91,12 +90,12 @@ fun NewsScreenContent() {
                 modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
             ) {
                 //              "categories"
-                composable(CategoriesScreen().route) {
+                composable(CategoriesScreen.ROUTE_NAME) {
                     toolbarTitle.intValue = R.string.news_app
                     CategoriesFragment(navController)
                 }
                 composable(
-                    "${NewsScreen().route}/{category_name}/{category_id}",
+                    "${NewsScreen.ROUTE_NAME}/{category_name}/{category_id}",
                     arguments = listOf(navArgument("category_id") {
                         type = NavType.StringType
                     }, navArgument("category_name") {

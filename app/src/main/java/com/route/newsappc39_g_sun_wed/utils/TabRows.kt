@@ -21,66 +21,48 @@ import com.route.newsappc39_g_sun_wed.model.Category
 import com.route.newsappc39_g_sun_wed.model.Constants
 import com.route.newsappc39_g_sun_wed.model.api.SourcesItem
 import com.route.newsappc39_g_sun_wed.model.api.SourcesResponse
+import com.route.newsappc39_g_sun_wed.ui.news.NewsViewModel
 import com.route.newsappc39_g_sun_wed.ui.theme.green
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun NewsSourcesTabRow(category: String, onTabSelected: (sourceId: String) -> Unit) {
-    val selectedTabIndex = remember {
-        mutableIntStateOf(0)
-    }
-    val sourcesList = remember {
-        mutableStateListOf<SourcesItem>()
-    }
+fun NewsSourcesTabRow(
+    category: String,
+    viewModel: NewsViewModel = viewModel(),
+    onTabSelected: (sourceId: String) -> Unit
+) {
+
     //
     LaunchedEffect(Unit) {
-        APIManager
-            .getNewsServices()
-            .getNewsSources(Constants.API_KEY, category)
-            .enqueue(object : Callback<SourcesResponse> {
-                override fun onResponse(
-                    call: Call<SourcesResponse>,
-                    response: Response<SourcesResponse>
-                ) {
-                    val sources = response.body()?.sources
-                    if (sources?.isNotEmpty() == true) {
-                        sourcesList.addAll(sources)
-                    }
-                }
-
-                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-
-
-            }) // Background Thread
-//            .execute() // Main Thread (UI Thread)   -> User-> User Clicks , and navigation
+        viewModel.getNewsSources(category)
     }
-    if (sourcesList.isNotEmpty()) {
+    if (viewModel.sourcesList.isNotEmpty()) {
         LaunchedEffect(Unit) {
-            val sourceId = sourcesList.get(0).id
+            val sourceId = viewModel.sourcesList.get(0).id
             onTabSelected(sourceId ?: "")
         }
     }
     ScrollableTabRow(
-        selectedTabIndex = selectedTabIndex.intValue,
+        selectedTabIndex = viewModel.selectedTabIndex.intValue,
         edgePadding = 8.dp,
         indicator = {},
         divider = {}) {
-        sourcesList.forEachIndexed { index, item ->
+        viewModel.sourcesList.forEachIndexed { index, item ->
             Tab(
-                selected = index == selectedTabIndex.intValue,
+                selected = index == viewModel.selectedTabIndex.intValue,
                 onClick = {
                     onTabSelected(item.id ?: "")
-                    selectedTabIndex.intValue = index
+                    viewModel.selectedTabIndex.intValue = index
                 },
                 selectedContentColor = Color.White,
                 unselectedContentColor = green
             ) {
                 Text(
-                    text = item.name ?: "", modifier = if (selectedTabIndex.intValue == index)
+                    text = item.name ?: "",
+                    modifier = if (viewModel.selectedTabIndex.intValue == index)
                         Modifier
                             .padding(8.dp)
                             .background(green, RoundedCornerShape(50))
