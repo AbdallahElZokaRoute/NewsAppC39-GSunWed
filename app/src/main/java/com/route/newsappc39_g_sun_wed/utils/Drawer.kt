@@ -1,0 +1,84 @@
+package com.route.newsappc39_g_sun_wed.utils
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.route.newsappc39_g_sun_wed.R
+import com.route.newsappc39_g_sun_wed.ui.theme.green
+
+@Composable
+fun NavigationDrawerSheet(onSettingsClick: () -> Unit, onCategoriesClick: () -> Unit) {
+    ModalDrawerSheet(modifier = Modifier.fillMaxWidth(0.7F), drawerContainerColor = Color.White) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.2F)
+                .background(green),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = stringResource(id = R.string.news_app),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+        NavigationDrawerItem(
+            iconResId = R.drawable.ic_categories,
+            textResId = R.string.categories,
+            onNavigationItemClick = {
+                onCategoriesClick()
+            }
+        )
+        NavigationDrawerItem(
+            iconResId = R.drawable.ic_settings,
+            textResId = R.string.settings,
+            onNavigationItemClick = {
+                onSettingsClick()
+            })
+    }
+}
+
+@Composable
+fun NavigationDrawerItem(iconResId: Int, textResId: Int, onNavigationItemClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable {
+                onNavigationItemClick()
+            }) {
+        Image(
+            painter = painterResource(id = iconResId),
+            contentDescription = stringResource(R.string.navigation_item)
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = stringResource(id = textResId), fontSize = 24.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun NavigationDrawerSheetPreview() {
+    NavigationDrawerSheet(onSettingsClick = {}, onCategoriesClick = {})
+}
